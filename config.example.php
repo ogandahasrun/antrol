@@ -1,7 +1,10 @@
 <?php
 /**
- * Konfigurasi Utama Service Mobile JKN Bridging (PHP Native)
+ * Template Konfigurasi Utama Service Mobile JKN Bridging (PHP Native)
  * SIMRS Khanza - Antrean Online BPJS Kesehatan
+ * 
+ * PETUNJUK PENGGUNAAN:
+ * Copy/Rename file ini menjadi 'config.php' lalu sesuaikan parameternya.
  */
 
 // Timezone Wajib Indonesia Barat
