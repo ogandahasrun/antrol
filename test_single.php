@@ -190,6 +190,7 @@
                 <div class="form-group">
                     <label for="actionType">Tipe Aksi Request:</label>
                     <select id="actionType" class="form-control">
+                        <option value="check">🔍 0. Cek Status Booking (Database SIMRS & Log Task ID)</option>
                         <option value="add">1. Tambah Antrean (/antrean/add)</option>
                         <option value="task1">2. Task ID 1 - Mulai Tunggu Poli</option>
                         <option value="task2">3. Task ID 2 - Mulai Pelayanan Dokter</option>
