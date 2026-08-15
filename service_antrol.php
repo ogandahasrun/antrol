@@ -257,7 +257,9 @@ function sendTaskIdUpdate($pdo, $kodeBooking, $noRawat, $taskId, $waktuStr, $lab
 $sqlBpjsTask = "SELECT 
                   referensi_mobilejkn_bpjs.nobooking,
                   referensi_mobilejkn_bpjs.no_rawat,
-                  referensi_mobilejkn_bpjs.validasi 
+                  referensi_mobilejkn_bpjs.validasi,
+                  referensi_mobilejkn_bpjs.tanggalperiksa,
+                  referensi_mobilejkn_bpjs.jampraktek 
                 FROM referensi_mobilejkn_bpjs 
                 WHERE referensi_mobilejkn_bpjs.tanggalperiksa BETWEEN :tgl1 AND :tgl2 
                 ORDER BY referensi_mobilejkn_bpjs.tanggalperiksa";
@@ -282,6 +284,25 @@ try {
         // Digit ke-14 no_rawat untuk modulus
         $digit14 = strlen($noRawat) >= 14 ? (int)substr($noRawat, 13, 1) : 0;
 
+        // Penentuan Waktu Validasi Efektif (Gunakan validasi asli DB jika ada; jika kosong/0000-00-00, gunakan Fallback Ide A)
+        $validasiEffective = $row['validasi'];
+        if (empty($validasiEffective) || $validasiEffective === '0000-00-00 00:00:00') {
+            $jamMulai = "08:00:00";
+            if (!empty($row['jampraktek'])) {
+                $parts = explode('-', $row['jampraktek']);
+                $jamMulaiClean = trim($parts[0]);
+                if (strlen($jamMulaiClean) >= 5) {
+                    $jamMulai = substr($jamMulaiClean, 0, 5) . ":00";
+                }
+            }
+            $menit = (int)substr($noRawat, -2);
+            $nomorUrut = (int)substr($noRawat, -4);
+            $detik = $nomorUrut % 60;
+            $tglPeriksa = !empty($row['tanggalperiksa']) ? $row['tanggalperiksa'] : date('Y-m-d');
+            $baseTime = strtotime("$tglPeriksa $jamMulai");
+            $validasiEffective = date('Y-m-d H:i:s', $baseTime + ($menit * 60) + $detik);
+        }
+
         // Cek status keberadaan Task 1, 2, dan 3 saat ini
         $task3Done = isTaskIdProcessed($pdo, $noRawat, '3');
         $task1Done = isTaskIdProcessed($pdo, $noRawat, '1');
@@ -293,8 +314,8 @@ try {
         // ATURAN: Jika Task 3 SUDAH dikirim/tersedia, BPJS menolak Task 1. Maka Task 1 hanya dikirim jika Task 3 BELUM dikirim.
         if (!$task3Done && !$task1Done) {
             $mod1 = $digit14 % 7;
-            $qT1 = $pdo->prepare("SELECT SUBDATE(validasi, INTERVAL " . (37 + $mod1) . " MINUTE) AS jam FROM referensi_mobilejkn_bpjs WHERE no_rawat = :no_rawat");
-            $qT1->execute([':no_rawat' => $noRawat]);
+            $qT1 = $pdo->prepare("SELECT SUBDATE(:val, INTERVAL " . (37 + $mod1) . " MINUTE) AS jam");
+            $qT1->execute([':val' => $validasiEffective]);
             $t1Time = $qT1->fetchColumn();
             if ($t1Time) {
                 $task1Done = sendTaskIdUpdate($pdo, $noBooking, $noRawat, '1', $t1Time, "taskid mulai tunggu poli BPJS", $stats);
@@ -306,8 +327,8 @@ try {
         // ATURAN: Hanya dikirim jika Task 1 SUDAH berhasil/dikirim DAN Task 3 BELUM dikirim.
         if (!$task3Done && $task1Done && !$task2Done) {
             $mod2 = $digit14 % 4;
-            $qT2 = $pdo->prepare("SELECT SUBDATE(validasi, INTERVAL " . (18 + $mod2) . " MINUTE) AS jam FROM referensi_mobilejkn_bpjs WHERE no_rawat = :no_rawat");
-            $qT2->execute([':no_rawat' => $noRawat]);
+            $qT2 = $pdo->prepare("SELECT SUBDATE(:val, INTERVAL " . (18 + $mod2) . " MINUTE) AS jam");
+            $qT2->execute([':val' => $validasiEffective]);
             $t2Time = $qT2->fetchColumn();
             if ($t2Time) {
                 $task2Done = sendTaskIdUpdate($pdo, $noBooking, $noRawat, '2', $t2Time, "taskid mulai pelayanan poli BPJS", $stats);
@@ -318,7 +339,7 @@ try {
         // TASK ID 3 (Selesai Pelayanan Admisi / Validasi Poli)
         // ATURAN: Pengecualian! Task 3 BISA dikirim meskipun Task 2 / Task 1 belum tersedia.
         if (!$task3Done) {
-            $t3Time = $row['validasi'];
+            $t3Time = $validasiEffective;
             if ($t3Time) {
                 $task3Done = sendTaskIdUpdate($pdo, $noBooking, $noRawat, '3', $t3Time, "taskid selesai pelayanan poli BPJS", $stats);
                 $patientTasksSent++;
@@ -329,8 +350,8 @@ try {
         // ATURAN: Hanya bisa dikirim jika Task 3 SUDAH dikirim/tersedia.
         if ($task3Done && !isTaskIdProcessed($pdo, $noRawat, '4')) {
             $mod4 = $digit14 % 3;
-            $qT4 = $pdo->prepare("SELECT DATE_ADD(validasi, INTERVAL " . (12 + $mod4) . " MINUTE) AS jam FROM referensi_mobilejkn_bpjs WHERE no_rawat = :no_rawat");
-            $qT4->execute([':no_rawat' => $noRawat]);
+            $qT4 = $pdo->prepare("SELECT DATE_ADD(:val, INTERVAL " . (12 + $mod4) . " MINUTE) AS jam");
+            $qT4->execute([':val' => $validasiEffective]);
             $t4Time = $qT4->fetchColumn();
             if ($t4Time) {
                 sendTaskIdUpdate($pdo, $noBooking, $noRawat, '4', $t4Time, "taskid mulai tunggu farmasi BPJS", $stats);
@@ -342,8 +363,8 @@ try {
         // ATURAN: Hanya bisa dikirim jika Task 4 SUDAH dikirim/tersedia.
         if (isTaskIdProcessed($pdo, $noRawat, '4') && !isTaskIdProcessed($pdo, $noRawat, '5')) {
             $mod5 = $digit14 % 6;
-            $qT5 = $pdo->prepare("SELECT DATE_ADD(validasi, INTERVAL " . (31 + $mod5) . " MINUTE) AS jam FROM referensi_mobilejkn_bpjs WHERE no_rawat = :no_rawat");
-            $qT5->execute([':no_rawat' => $noRawat]);
+            $qT5 = $pdo->prepare("SELECT DATE_ADD(:val, INTERVAL " . (31 + $mod5) . " MINUTE) AS jam");
+            $qT5->execute([':val' => $validasiEffective]);
             $t5Time = $qT5->fetchColumn();
             if ($t5Time) {
                 sendTaskIdUpdate($pdo, $noBooking, $noRawat, '5', $t5Time, "taskid mulai racik obat BPJS", $stats);

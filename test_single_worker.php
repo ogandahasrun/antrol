@@ -182,14 +182,35 @@ elseif ($action === 'add') {
 elseif (strpos($action, 'task') === 0) {
     $taskIdNum = str_replace('task', '', $action);
 
-    // Ambil no_rawat dan validasi dari DB jika ada
-    $stmtValidasi = $pdo->prepare("SELECT no_rawat, validasi FROM referensi_mobilejkn_bpjs WHERE nobooking = :kb OR no_rawat = :nr LIMIT 1");
+    // Ambil no_rawat, validasi, tanggalperiksa, dan jampraktek dari DB jika ada
+    $stmtValidasi = $pdo->prepare("SELECT no_rawat, validasi, tanggalperiksa, jampraktek FROM referensi_mobilejkn_bpjs WHERE nobooking = :kb OR no_rawat = :nr LIMIT 1");
     $stmtValidasi->execute([':kb' => $kodeBooking, ':nr' => $noRawat]);
     $rowVal = $stmtValidasi->fetch();
 
     $customWaktu   = isset($_POST['customwaktu']) && !empty($_POST['customwaktu']) ? trim($_POST['customwaktu']) : '';
     $noRawatTarget = $rowVal && !empty($rowVal['no_rawat']) ? $rowVal['no_rawat'] : $noRawat;
-    $validasiStr   = $rowVal && !empty($rowVal['validasi']) ? $rowVal['validasi'] : date('Y-m-d H:i:s');
+    
+    // Penentuan $validasiStr (Gunakan validasi asli jika ada; jika kosong/0000-00-00, gunakan Fallback Ide A)
+    $validasiRaw = $rowVal && !empty($rowVal['validasi']) ? $rowVal['validasi'] : '';
+    if (!empty($validasiRaw) && $validasiRaw !== '0000-00-00 00:00:00') {
+        $validasiStr = $validasiRaw;
+    } else {
+        $jamMulai = "08:00:00";
+        if ($rowVal && !empty($rowVal['jampraktek'])) {
+            $parts = explode('-', $rowVal['jampraktek']);
+            $jamMulaiClean = trim($parts[0]);
+            if (strlen($jamMulaiClean) >= 5) {
+                $jamMulai = substr($jamMulaiClean, 0, 5) . ":00";
+            }
+        }
+        $menit = (int)substr($noRawatTarget, -2);
+        $nomorUrut = (int)substr($noRawatTarget, -4);
+        $detik = $nomorUrut % 60;
+        $tglPeriksa = ($rowVal && !empty($rowVal['tanggalperiksa'])) ? $rowVal['tanggalperiksa'] : date('Y-m-d');
+        $baseTime = strtotime("$tglPeriksa $jamMulai");
+        $validasiStr = date('Y-m-d H:i:s', $baseTime + ($menit * 60) + $detik);
+    }
+
     $digit14       = strlen($noRawatTarget) >= 14 ? (int)substr($noRawatTarget, 13, 1) : 0;
 
     if (!empty($customWaktu)) {
