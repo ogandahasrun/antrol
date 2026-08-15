@@ -3,665 +3,400 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIMKES Khanza - Service Mobile JKN Bridging Dashboard</title>
+    <title>Home Portal - SIMKES Khanza Mobile JKN Bridging</title>
+    <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --bg-body: #0b0f17;
-            --bg-card: rgba(22, 30, 46, 0.75);
-            --bg-card-hover: rgba(30, 41, 64, 0.85);
-            --border-card: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(59, 130, 246, 0.5);
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
+            --bg-dark: #0b0f17;
+            --card-bg: rgba(22, 30, 46, 0.75);
+            --card-hover: rgba(30, 41, 64, 0.9);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
             --accent-cyan: #06b6d4;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --font-main: 'Inter', sans-serif;
-            --font-code: 'Fira Code', monospace;
+            --accent-green: #22c55e;
+            --accent-purple: #a855f7;
+            --accent-amber: #f59e0b;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: var(--font-main);
-            background-color: var(--bg-body);
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #070a10 0%, #0f172a 100%);
             color: var(--text-main);
             min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
-            background-attachment: fixed;
             padding: 24px;
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1300px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 28px;
         }
 
-        /* Header */
+        /* Navbar Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--bg-card);
+            background: var(--card-bg);
             backdrop-filter: blur(16px);
-            border: 1px solid var(--border-card);
-            border-radius: 16px;
-            padding: 20px 28px;
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 16px 28px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
 
-        .brand-title {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+        .brand-title { display: flex; align-items: center; gap: 16px; }
 
         .brand-icon {
-            width: 46px;
-            height: 46px;
-            background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-            font-weight: 700;
-            font-size: 22px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.4);
+            font-weight: 700; font-size: 22px;
         }
 
         .brand-text h1 {
-            font-size: 20px;
+            font-size: 19px; font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, #93c5fd);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text p { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+        .nav-links {
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-item {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 16px; border-radius: 10px;
+            text-decoration: none; font-size: 13px; font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+            background: rgba(56, 189, 248, 0.18);
+            border-color: rgba(56, 189, 248, 0.4);
+            font-weight: 600;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px 36px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -10%;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-text h2 {
+            font-size: 26px;
             font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(to right, #ffffff, #93c5fd);
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .brand-text p {
-            font-size: 13px;
+        .hero-text p {
+            font-size: 14px;
             color: var(--text-muted);
-            margin-top: 2px;
+            max-width: 680px;
+            line-height: 1.6;
         }
 
-        .status-badge {
+        .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
+            gap: 10px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            color: #4ade80;
+            padding: 10px 18px;
             border-radius: 30px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--success);
             font-size: 13px;
             font-weight: 600;
+            white-space: nowrap;
         }
 
-        .status-pulse {
-            width: 8px;
-            height: 8px;
-            background-color: var(--success);
+        .pulse-dot {
+            width: 9px; height: 9px;
+            background-color: #22c55e;
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--success);
+            box-shadow: 0 0 10px #22c55e;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
 
-        /* KPI Cards Grid */
-        .kpi-grid {
+        /* 3 Menu Cards Grid */
+        .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
         }
 
-        .kpi-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-card);
-            border-radius: 14px;
-            padding: 20px;
-            transition: all 0.3s ease;
+        @media (max-width: 992px) {
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
         }
 
-        .kpi-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border-glow);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .kpi-card::before {
+        .menu-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            transition: all 0.3s ease;
         }
 
-        .kpi-card.blue::before { background: var(--primary); }
-        .kpi-card.green::before { background: var(--success); }
-        .kpi-card.amber::before { background: var(--warning); }
-        .kpi-card.cyan::before { background: var(--accent-cyan); }
+        .card-engine::before { background: linear-gradient(90deg, #0284c7, #38bdf8); }
+        .card-kontrol::before { background: linear-gradient(90deg, #9333ea, #c084fc); }
+        .card-tester::before { background: linear-gradient(90deg, #059669, #34d399); }
 
-        .kpi-title {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
+        .menu-card:hover {
+            transform: translateY(-6px);
+            background: var(--card-hover);
+            border-color: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-badge {
+            align-self: flex-start;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .kpi-value {
-            font-size: 28px;
-            font-weight: 700;
-            margin-top: 8px;
-            font-family: var(--font-code);
+        .badge-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .badge-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .badge-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+
+        .card-header-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .kpi-desc {
+        .card-icon {
+            width: 54px; height: 54px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+        .icon-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+        .icon-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+
+        .card-title-text h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .card-title-text p {
             font-size: 12px;
             color: var(--text-muted);
-            margin-top: 6px;
         }
 
-        /* Main Control Panel & Terminal Layout */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 960px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Controls Sidebar */
-        .panel-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-card);
-            border-radius: 16px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .panel-title {
-            font-size: 16px;
-            font-weight: 600;
-            border-bottom: 1px solid var(--border-card);
-            padding-bottom: 12px;
-            color: var(--text-main);
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .form-control {
-            background: rgba(11, 15, 23, 0.6);
-            border: 1px solid var(--border-card);
-            border-radius: 8px;
-            padding: 10px 14px;
-            color: var(--text-main);
-            font-family: var(--font-main);
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-card);
-            color: var(--text-main);
-            box-shadow: none;
-        }
-
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-        }
-
-        /* Toggle Switch */
-        .toggle-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 14px;
-            background: rgba(11, 15, 23, 0.4);
-            border: 1px solid var(--border-card);
-            border-radius: 10px;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #374151;
-            transition: .3s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--success);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-        /* Progress Timer */
-        .timer-container {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .timer-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .timer-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
-            transition: width 1s linear;
-        }
-
-        /* Terminal Console */
-        .terminal-card {
-            background: #0d1117;
-            border: 1px solid var(--border-card);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
-            min-height: 480px;
-        }
-
-        .terminal-header {
-            background: #161b22;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .terminal-dots {
-            display: flex;
-            gap: 8px;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .dot.red { background-color: #ff5f56; }
-        .dot.yellow { background-color: #ffbd2e; }
-        .dot.green { background-color: #27c93f; }
-
-        .terminal-title {
-            font-family: var(--font-code);
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .terminal-body {
-            padding: 16px;
-            font-family: var(--font-code);
-            font-size: 13px;
+        .card-desc {
+            font-size: 13.5px;
+            color: #cbd5e1;
             line-height: 1.6;
-            color: #d1d5db;
-            overflow-y: auto;
-            flex: 1;
-            max-height: 520px;
-            white-space: pre-wrap;
-            word-break: break-all;
         }
 
-        .log-line {
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-blue { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .btn-purple { background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .btn-green { background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+
+        .menu-card:hover .card-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        /* System Info Footer Box */
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 20px 28px;
             display: flex;
-            gap: 12px;
-            padding: 2px 0;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
         }
-
-        .log-line .line-num {
-            color: #4b5563;
-            user-select: none;
-            min-width: 30px;
-        }
-
-        .log-line .line-content {
-            flex: 1;
-        }
-
-        .log-tag-success { color: var(--success); }
-        .log-tag-info { color: var(--primary); }
-        .log-tag-warn { color: var(--warning); }
-        .log-tag-error { color: var(--danger); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Header -->
+    <!-- Navbar Header -->
     <header>
         <div class="brand-title">
-            <div class="brand-icon">🏥</div>
+            <div class="brand-icon"><i class="fa-solid fa-hospital"></i></div>
             <div class="brand-text">
-                <h1>SIMKES Khanza - Service Mobile JKN Bridging</h1>
-                <p>PHP Native Engine & Auto Synchronization Worker v2.0</p>
+                <h1>SIMKES Khanza - Mobile JKN Portal</h1>
+                <p>Sistem Pengiriman & Monitoring Antrean BPJS Kesehatan</p>
             </div>
         </div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-            <a href="test_single.php" style="background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.4); color: var(--accent-cyan); padding: 8px 16px; border-radius: 10px; text-decoration: none; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                <span>🧪 Tester 1 Kode Booking</span>
-            </a>
-            <div class="status-badge">
-                <div class="status-pulse"></div>
-                <span>Engine Ready</span>
-            </div>
-        </div>
+
+        <nav class="nav-links">
+            <a href="index.php" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="engine_sync.php" class="nav-item"><i class="fa-solid fa-bolt"></i> Engine Sync</a>
+            <a href="monitoring_taskid.php" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kontrol Task ID</a>
+            <a href="test_single.php" class="nav-item"><i class="fa-solid fa-vial"></i> Tester Single</a>
+        </nav>
     </header>
 
-    <!-- KPI Cards -->
-    <div class="kpi-grid">
-        <div class="kpi-card blue">
-            <div class="kpi-title">Add Antrean Sukses</div>
-            <div class="kpi-value" id="kpiAdd">0</div>
-            <div class="kpi-desc">Terkirim ke /antrean/add</div>
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="hero-text">
+            <h2>Portal Integrasi Antrean Mobile JKN</h2>
+            <p>Pilih salah satu menu di bawah untuk mengelola siklus sinkronisasi antrean otomatis, melakukan audit kelengkapan Task ID 1 s.d. 7 per pasien, atau melakukan pengujian 1-by-1 secara manual.</p>
         </div>
-        <div class="kpi-card amber">
-            <div class="kpi-title">Batal Antrean</div>
-            <div class="kpi-value" id="kpiBatal">0</div>
-            <div class="kpi-desc">Terkirim ke /antrean/batal</div>
-        </div>
-        <div class="kpi-card green">
-            <div class="kpi-title">Task ID Terkirim</div>
-            <div class="kpi-value" id="kpiTaskIdSuccess">0</div>
-            <div class="kpi-desc">Task ID 1 - 7 & 99 Sukses</div>
-        </div>
-        <div class="kpi-card cyan">
-            <div class="kpi-title">Terakhir Diperbarui</div>
-            <div class="kpi-value" id="kpiLastSync" style="font-size: 20px;">--:--:--</div>
-            <div class="kpi-desc">Waktu Eksekusi Sync</div>
+        <div>
+            <div class="status-pill">
+                <div class="pulse-dot"></div>
+                <span>Engine Ready & Connected</span>
+            </div>
         </div>
     </div>
 
-    <!-- Main Layout -->
-    <div class="main-layout">
-        <!-- Controls Sidebar -->
-        <div class="panel-card">
-            <div class="panel-title">🎛️ Panel Kontrol Sync</div>
-
-            <div class="form-group">
-                <label for="tanggal1">Tanggal Mulai:</label>
-                <input type="date" id="tanggal1" class="form-control" value="<?php echo date('Y-m-d'); ?>">
-            </div>
-
-            <div class="form-group">
-                <label for="tanggal2">Tanggal Selesai:</label>
-                <input type="date" id="tanggal2" class="form-control" value="<?php echo date('Y-m-d'); ?>">
-            </div>
-
-            <button id="btnSync" class="btn">
-                <span>🚀 Jalankan Sync Sekarang</span>
-            </button>
-
-            <div class="toggle-box">
-                <span style="font-size: 13px; font-weight: 500;">Auto Sync (10 Min)</span>
-                <label class="switch">
-                    <input type="checkbox" id="autoSyncToggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="timer-container">
-                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
-                    <span>Hitung Mundur:</span>
-                    <span id="timerText" style="font-weight: 600; color: var(--primary);">10:00</span>
-                </div>
-                <div class="timer-bar">
-                    <div id="timerFill" class="timer-fill"></div>
+    <!-- 3 Main Menu Cards Grid -->
+    <div class="menu-grid">
+        <!-- Card 1: Engine Sync Worker -->
+        <a href="engine_sync.php" class="menu-card card-engine">
+            <span class="card-badge badge-blue">Auto Worker / Scheduler</span>
+            <div class="card-header-box">
+                <div class="card-icon icon-blue"><i class="fa-solid fa-bolt"></i></div>
+                <div class="card-title-text">
+                    <h3>Engine Sync Worker</h3>
+                    <p>Auto Sync & Task Scheduler</p>
                 </div>
             </div>
+            <p class="card-desc">Jalankan siklus sinkronisasi otomatis (/antrean/add, updatewaktu 1-7, & batal). Dilengkapi live console log, timer 10 menit, & tombol stop.</p>
+            <div class="card-btn btn-blue">
+                <span>Buka Engine Sync Worker</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+        </a>
 
-            <button id="btnClearLog" class="btn btn-outline" style="margin-top: 10px;">
-                <span>🗑️ Bersihkan Log</span>
-            </button>
-        </div>
-
-        <!-- Terminal Console Card -->
-        <div class="terminal-card">
-            <div class="terminal-header">
-                <div class="terminal-dots">
-                    <div class="dot red"></div>
-                    <div class="dot yellow"></div>
-                    <div class="dot green"></div>
+        <!-- Card 2: Kontrol Task ID -->
+        <a href="monitoring_taskid.php" class="menu-card card-kontrol">
+            <span class="card-badge badge-purple">Audit & Monitoring</span>
+            <div class="card-header-box">
+                <div class="card-icon icon-purple"><i class="fa-solid fa-chart-line"></i></div>
+                <div class="card-title-text">
+                    <h3>Kontrol Task ID</h3>
+                    <p>Matriks Audit 14 Kolom</p>
                 </div>
-                <div class="terminal-title">Output Console Log (PHP Native Service Worker)</div>
-                <div style="font-size: 12px; color: var(--text-muted);" id="logCount">0 baris</div>
             </div>
-            <div class="terminal-body" id="terminalBody">
-                <div class="log-line"><span class="line-num">1</span><span class="line-content log-tag-info">[SYSTEM] Service Mobile JKN Bridging Dashboard SIAP.</span></div>
-                <div class="log-line"><span class="line-num">2</span><span class="line-content">[SYSTEM] Klik 'Jalankan Sync Sekarang' atau aktifkan Auto Sync 10 Menit.</span></div>
+            <p class="card-desc">Inspeksi detail waktu Task 1 s.d. 7 seluruh pasien (BPJS & Onsite). Menampilkan status resep dan indikator kelengkapan pengiriman.</p>
+            <div class="card-btn btn-purple">
+                <span>Buka Kontrol Task ID</span>
+                <i class="fa-solid fa-arrow-right"></i>
             </div>
-        </div>
+        </a>
+
+        <!-- Card 3: Tester Single Booking -->
+        <a href="test_single.php" class="menu-card card-tester">
+            <span class="card-badge badge-green">Testing & Debugging</span>
+            <div class="card-header-box">
+                <div class="card-icon icon-green"><i class="fa-solid fa-vial"></i></div>
+                <div class="card-title-text">
+                    <h3>Tester Single Booking</h3>
+                    <p>Uji Coba Manual 1-by-1</p>
+                </div>
+            </div>
+            <p class="card-desc">Pengujian pengiriman 1 kode booking / No. Rawat secara manual. Mendukung pilihan input tanggal & jam custom untuk keperluan testing.</p>
+            <div class="card-btn btn-green">
+                <span>Buka Single Tester</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+        </a>
+    </div>
+
+    <!-- Info Footer Box -->
+    <div class="info-card">
+        <div><i class="fa-solid fa-database"></i> SIMRS Database: <strong>Connected</strong></div>
+        <div><i class="fa-solid fa-server"></i> Server Time: <strong><?= date('Y-m-d H:i:s T') ?></strong></div>
+        <div><i class="fa-solid fa-code-branch"></i> Version: <strong>PHP Native Engine v2.0</strong></div>
     </div>
 </div>
 
-<script>
-    const btnSync = document.getElementById('btnSync');
-    const btnClearLog = document.getElementById('btnClearLog');
-    const terminalBody = document.getElementById('terminalBody');
-    const autoSyncToggle = document.getElementById('autoSyncToggle');
-    const timerText = document.getElementById('timerText');
-    const timerFill = document.getElementById('timerFill');
-    const logCount = document.getElementById('logCount');
-
-    let lineCounter = 2;
-    let timerSeconds = 600; // 10 menit
-    let timerInterval = null;
-
-    function addLog(text) {
-        lineCounter++;
-        const line = document.createElement('div');
-        line.className = 'log-line';
-
-        let tagClass = '';
-        if (text.includes('Sukses') || text.includes('code: 200') || text.includes('code: 208') || text.includes('200 Ok')) {
-            tagClass = 'log-tag-success';
-        } else if (text.includes('Error') || text.includes('Gagal') || text.includes('Exception')) {
-            tagClass = 'log-tag-error';
-        } else if (text.includes('Menjalankan') || text.includes('JSON')) {
-            tagClass = 'log-tag-info';
-        }
-
-        line.innerHTML = `<span class="line-num">${lineCounter}</span><span class="line-content ${tagClass}">${escapeHtml(text)}</span>`;
-        terminalBody.appendChild(line);
-        terminalBody.scrollTop = terminalBody.scrollHeight;
-        logCount.innerText = lineCounter + ' baris';
-    }
-
-    function escapeHtml(text) {
-        return text
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-    async function runSync() {
-        btnSync.disabled = true;
-        btnSync.innerHTML = '<span>⏳ Memproses Sync...</span>';
-
-        const tgl1 = document.getElementById('tanggal1').value;
-        const tgl2 = document.getElementById('tanggal2').value;
-
-        addLog(`[ACTION] Memulai siklus sinkronisasi untuk periode ${tgl1} s.d. ${tgl2}...`);
-
-        try {
-            const response = await fetch(`service_antrol.php?tanggal1=${tgl1}&tanggal2=${tgl2}`);
-            const data = await response.json();
-
-            if (data.logs && Array.isArray(data.logs)) {
-                data.logs.forEach(msg => addLog(msg));
-            }
-
-            if (data.stats) {
-                document.getElementById('kpiAdd').innerText = data.stats.add_success || 0;
-                document.getElementById('kpiBatal').innerText = data.stats.batal_success || 0;
-                document.getElementById('kpiTaskIdSuccess').innerText = data.stats.taskid_success || 0;
-            }
-
-            const now = new Date();
-            document.getElementById('kpiLastSync').innerText = now.toTimeString().split(' ')[0];
-
-        } catch (err) {
-            addLog(`[ERROR] Gagal menghubungi service_antrol.php: ${err.message}`);
-        } finally {
-            btnSync.disabled = false;
-            btnSync.innerHTML = '<span>🚀 Jalankan Sync Sekarang</span>';
-            resetTimer();
-        }
-    }
-
-    function resetTimer() {
-        timerSeconds = 600;
-        updateTimerDisplay();
-    }
-
-    function updateTimerDisplay() {
-        const mins = Math.floor(timerSeconds / 60);
-        const secs = timerSeconds % 60;
-        timerText.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        const pct = ((600 - timerSeconds) / 600) * 100;
-        timerFill.style.width = `${pct}%`;
-    }
-
-    // Countdown Timer Loop
-    setInterval(() => {
-        if (autoSyncToggle.checked) {
-            if (timerSeconds > 0) {
-                timerSeconds--;
-                updateTimerDisplay();
-            } else {
-                runSync();
-            }
-        }
-    }, 1000);
-
-    btnSync.addEventListener('click', runSync);
-    btnClearLog.addEventListener('click', () => {
-        terminalBody.innerHTML = '';
-        lineCounter = 0;
-        addLog('[SYSTEM] Log telah dibersihkan.');
-    });
-
-    // Jalankan sync pertama kali secara otomatis saat dibuka
-    runSync();
-</script>
 </body>
 </html>

@@ -187,46 +187,54 @@ elseif (strpos($action, 'task') === 0) {
     $stmtValidasi->execute([':kb' => $kodeBooking, ':nr' => $noRawat]);
     $rowVal = $stmtValidasi->fetch();
 
+    $customWaktu   = isset($_POST['customwaktu']) && !empty($_POST['customwaktu']) ? trim($_POST['customwaktu']) : '';
     $noRawatTarget = $rowVal && !empty($rowVal['no_rawat']) ? $rowVal['no_rawat'] : $noRawat;
     $validasiStr   = $rowVal && !empty($rowVal['validasi']) ? $rowVal['validasi'] : date('Y-m-d H:i:s');
     $digit14       = strlen($noRawatTarget) >= 14 ? (int)substr($noRawatTarget, 13, 1) : 0;
 
-    $waktuCalculated = $validasiStr;
-
-    if ($taskIdNum === '1') {
-        $mod1 = $digit14 % 7;
-        $qT1 = $pdo->prepare("SELECT SUBDATE(:val, INTERVAL " . (37 + $mod1) . " MINUTE)");
-        $qT1->execute([':val' => $validasiStr]);
-        $waktuCalculated = $qT1->fetchColumn();
-    } elseif ($taskIdNum === '2') {
-        $mod2 = $digit14 % 4;
-        $qT2 = $pdo->prepare("SELECT SUBDATE(:val, INTERVAL " . (18 + $mod2) . " MINUTE)");
-        $qT2->execute([':val' => $validasiStr]);
-        $waktuCalculated = $qT2->fetchColumn();
-    } elseif ($taskIdNum === '3') {
+    if (!empty($customWaktu)) {
+        $waktuCalculated = date('Y-m-d H:i:s', strtotime($customWaktu));
+        $infoWaktu = $waktuCalculated . " (Set Waktu Custom Manual Pengguna)";
+    } else {
         $waktuCalculated = $validasiStr;
-    } elseif ($taskIdNum === '4') {
-        $mod4 = $digit14 % 3;
-        $qT4 = $pdo->prepare("SELECT DATE_ADD(:val, INTERVAL " . (12 + $mod4) . " MINUTE)");
-        $qT4->execute([':val' => $validasiStr]);
-        $waktuCalculated = $qT4->fetchColumn();
-    } elseif ($taskIdNum === '5') {
-        $mod5 = $digit14 % 6;
-        $qT5 = $pdo->prepare("SELECT DATE_ADD(:val, INTERVAL " . (31 + $mod5) . " MINUTE)");
-        $qT5->execute([':val' => $validasiStr]);
-        $waktuCalculated = $qT5->fetchColumn();
-    } elseif ($taskIdNum === '6') {
-        $qT6 = $pdo->prepare("SELECT CONCAT(resep_obat.tgl_peresepan,' ',resep_obat.jam_peresepan) AS jam FROM resep_obat WHERE resep_obat.tgl_peresepan<>'0000-00-00' AND resep_obat.status='ralan' AND resep_obat.no_rawat = :nr LIMIT 1");
-        $qT6->execute([':nr' => $noRawatTarget]);
-        $resT6 = $qT6->fetchColumn();
-        if ($resT6) $waktuCalculated = $resT6;
-    } elseif ($taskIdNum === '7') {
-        $qT7 = $pdo->prepare("SELECT CONCAT(resep_obat.tgl_perawatan,' ',resep_obat.jam) AS jam FROM resep_obat WHERE resep_obat.tgl_perawatan<>'0000-00-00' AND resep_obat.status='ralan' AND resep_obat.no_rawat = :nr LIMIT 1");
-        $qT7->execute([':nr' => $noRawatTarget]);
-        $resT7 = $qT7->fetchColumn();
-        if ($resT7) $waktuCalculated = $resT7;
-    } elseif ($taskIdNum === '99') {
-        $waktuCalculated = date('Y-m-d H:i:s');
+
+        if ($taskIdNum === '1') {
+            $mod1 = $digit14 % 7;
+            $qT1 = $pdo->prepare("SELECT SUBDATE(:val, INTERVAL " . (37 + $mod1) . " MINUTE)");
+            $qT1->execute([':val' => $validasiStr]);
+            $waktuCalculated = $qT1->fetchColumn();
+        } elseif ($taskIdNum === '2') {
+            $mod2 = $digit14 % 4;
+            $qT2 = $pdo->prepare("SELECT SUBDATE(:val, INTERVAL " . (18 + $mod2) . " MINUTE)");
+            $qT2->execute([':val' => $validasiStr]);
+            $waktuCalculated = $qT2->fetchColumn();
+        } elseif ($taskIdNum === '3') {
+            $waktuCalculated = $validasiStr;
+        } elseif ($taskIdNum === '4') {
+            $mod4 = $digit14 % 3;
+            $qT4 = $pdo->prepare("SELECT DATE_ADD(:val, INTERVAL " . (12 + $mod4) . " MINUTE)");
+            $qT4->execute([':val' => $validasiStr]);
+            $waktuCalculated = $qT4->fetchColumn();
+        } elseif ($taskIdNum === '5') {
+            $mod5 = $digit14 % 6;
+            $qT5 = $pdo->prepare("SELECT DATE_ADD(:val, INTERVAL " . (31 + $mod5) . " MINUTE)");
+            $qT5->execute([':val' => $validasiStr]);
+            $waktuCalculated = $qT5->fetchColumn();
+        } elseif ($taskIdNum === '6') {
+            $qT6 = $pdo->prepare("SELECT CONCAT(resep_obat.tgl_peresepan,' ',resep_obat.jam_peresepan) AS jam FROM resep_obat WHERE resep_obat.tgl_peresepan<>'0000-00-00' AND resep_obat.status='ralan' AND resep_obat.no_rawat = :nr LIMIT 1");
+            $qT6->execute([':nr' => $noRawatTarget]);
+            $resT6 = $qT6->fetchColumn();
+            if ($resT6) $waktuCalculated = $resT6;
+        } elseif ($taskIdNum === '7') {
+            $qT7 = $pdo->prepare("SELECT CONCAT(resep_obat.tgl_perawatan,' ',resep_obat.jam) AS jam FROM resep_obat WHERE resep_obat.tgl_perawatan<>'0000-00-00' AND resep_obat.status='ralan' AND resep_obat.no_rawat = :nr LIMIT 1");
+            $qT7->execute([':nr' => $noRawatTarget]);
+            $resT7 = $qT7->fetchColumn();
+            if ($resT7) $waktuCalculated = $resT7;
+        } elseif ($taskIdNum === '99') {
+            $waktuCalculated = date('Y-m-d H:i:s');
+        }
+
+        $infoWaktu = $waktuCalculated . " (Kalkulasi Otomatis SIMRS / Modulus Digit-14: " . $digit14 . ")";
     }
 
     $epochMs = strtotime($waktuCalculated) * 1000;
@@ -235,7 +243,7 @@ elseif (strpos($action, 'task') === 0) {
         "kodebooking" => $kodeBooking,
         "taskid"      => (string)$taskIdNum,
         "waktu"       => (string)$epochMs,
-        "_info_waktu_readable" => $waktuCalculated . " (Kalkulasi Modulus Digit-14: " . $digit14 . ")"
+        "_info_waktu_readable" => $infoWaktu
     ];
 
     $responsePayload = $payloadTask;

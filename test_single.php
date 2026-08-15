@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-body: #0b0f17;
@@ -46,6 +47,19 @@
             gap: 24px;
         }
 
+        .nav-links { display: flex; align-items: center; gap: 8px; }
+        .nav-item {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 16px; border-radius: 10px;
+            text-decoration: none; font-size: 13px; font-weight: 500;
+            color: var(--text-muted); transition: all 0.2s ease; border: 1px solid transparent;
+        }
+        .nav-item:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+        .nav-item.active {
+            color: #ffffff; background: rgba(56, 189, 248, 0.18);
+            border-color: rgba(56, 189, 248, 0.4); font-weight: 600;
+        }
+
         /* Header */
         header {
             display: flex;
@@ -77,16 +91,27 @@
         }
 
         .brand-text p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    </style>
+</head>
+<body>
 
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-card);
-            color: var(--text-main);
-            padding: 10px 18px; border-radius: 10px;
-            text-decoration: none; font-size: 13px; font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        .nav-btn:hover { background: rgba(59, 130, 246, 0.2); border-color: var(--primary); }
+<div class="container">
+    <!-- Header -->
+    <header>
+        <div class="brand-title">
+            <div class="brand-icon"><i class="fa-solid fa-vial"></i></div>
+            <div class="brand-text">
+                <h1>Tester Single Booking Mobile JKN</h1>
+                <p>Uji Coba Pengiriman 1 Kode Booking / Task ID ke Web Service BPJS</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="index.php" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="engine_sync.php" class="nav-item"><i class="fa-solid fa-bolt"></i> Engine Sync</a>
+            <a href="monitoring_taskid.php" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kontrol Task ID</a>
+            <a href="test_single.php" class="nav-item active"><i class="fa-solid fa-vial"></i> Tester Single</a>
+        </nav>
+    </header>
 
         /* Form Card */
         .card {
@@ -213,6 +238,12 @@
                     <label for="noRawat">No. Rawat (Opsional jika sama):</label>
                     <input type="text" id="noRawat" class="form-control" placeholder="Contoh: 2026/08/12/000001">
                 </div>
+
+                <div class="form-group">
+                    <label for="customWaktu">📅 Waktu Task Manual (Tanggal & Jam):</label>
+                    <input type="datetime-local" id="customWaktu" class="form-control">
+                    <small style="font-size: 11px; color: var(--text-muted);">Biarkan kosong untuk kalkulasi waktu otomatis SIMRS / DB.</small>
+                </div>
             </div>
 
             <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
@@ -263,12 +294,14 @@
         const actionType = document.getElementById('actionType').value;
         const kodeBooking = document.getElementById('kodeBooking').value.trim();
         const noRawat = document.getElementById('noRawat').value.trim() || kodeBooking;
+        const customWaktu = document.getElementById('customWaktu').value.trim();
 
         try {
             const formData = new FormData();
             formData.append('action', actionType);
             formData.append('kodebooking', kodeBooking);
             formData.append('norawat', noRawat);
+            formData.append('customwaktu', customWaktu);
 
             const res = await fetch('test_single_worker.php', {
                 method: 'POST',
