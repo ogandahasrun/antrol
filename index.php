@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/koneksi.php'; ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -318,7 +319,9 @@
             <a href="index.php" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
             <a href="engine_sync.php" class="nav-item"><i class="fa-solid fa-bolt"></i> Engine Sync</a>
             <a href="monitoring_taskid.php" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kontrol Task ID</a>
-            <a href="test_single.php" class="nav-item"><i class="fa-solid fa-vial"></i> Tester Single</a>
+            <a href="test_single.php" class="nav-item"><i class="fa-solid fa-paper-plane"></i> Kirim Single</a>
+            <a href="test_batch.php" class="nav-item"><i class="fa-solid fa-layer-group"></i> Kirim Bulk</a>
+            <a href="dashboard_waktutunggu.php" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Dashboard BPJS</a>
         </nav>
     </header>
 
@@ -326,7 +329,7 @@
     <div class="hero-banner">
         <div class="hero-text">
             <h2>Portal Integrasi Antrean Mobile JKN</h2>
-            <p>Pilih salah satu menu di bawah untuk mengelola siklus sinkronisasi antrean otomatis, melakukan audit kelengkapan Task ID 1 s.d. 7 per pasien, atau melakukan pengujian 1-by-1 secara manual.</p>
+            <p>Pilih salah satu menu di bawah untuk mengelola siklus sinkronisasi antrean otomatis, melakukan audit kelengkapan Task ID 1 s.d. 7 per pasien, atau melakukan pengiriman Single / Bulk secara mudah.</p>
         </div>
         <div>
             <div class="status-pill">
@@ -336,8 +339,8 @@
         </div>
     </div>
 
-    <!-- 3 Main Menu Cards Grid -->
-    <div class="menu-grid">
+    <!-- Main Menu Cards Grid -->
+    <div class="menu-grid" style="grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));">
         <!-- Card 1: Engine Sync Worker -->
         <a href="engine_sync.php" class="menu-card card-engine">
             <span class="card-badge badge-blue">Auto Worker / Scheduler</span>
@@ -372,19 +375,36 @@
             </div>
         </a>
 
-        <!-- Card 3: Tester Single Booking -->
+        <!-- Card 3: Kirim Single Booking -->
         <a href="test_single.php" class="menu-card card-tester">
-            <span class="card-badge badge-green">Testing & Debugging</span>
+            <span class="card-badge badge-green">Pengiriman 1-by-1</span>
             <div class="card-header-box">
-                <div class="card-icon icon-green"><i class="fa-solid fa-vial"></i></div>
+                <div class="card-icon icon-green"><i class="fa-solid fa-paper-plane"></i></div>
                 <div class="card-title-text">
-                    <h3>Tester Single Booking</h3>
-                    <p>Uji Coba Manual 1-by-1</p>
+                    <h3>Kirim Single Booking</h3>
+                    <p>Pengiriman Single Patient</p>
                 </div>
             </div>
-            <p class="card-desc">Pengujian pengiriman 1 kode booking / No. Rawat secara manual. Mendukung pilihan input tanggal & jam custom untuk keperluan testing.</p>
+            <p class="card-desc">Pengiriman 1 kode booking / No. Rawat secara manual. Mendukung pilihan input tanggal & jam custom untuk pengajuan Task 1 s.d 7.</p>
             <div class="card-btn btn-green">
-                <span>Buka Single Tester</span>
+                <span>Buka Kirim Single</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- Card 4: Kirim Bulk Booking -->
+        <a href="test_batch.php" class="menu-card card-engine">
+            <span class="card-badge badge-cyan" style="background: rgba(6, 182, 212, 0.15); color: #67e8f9; border-color: rgba(6, 182, 212, 0.3);">Pengiriman Massal</span>
+            <div class="card-header-box">
+                <div class="card-icon icon-blue" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="card-title-text">
+                    <h3>Kirim Bulk Booking</h3>
+                    <p>Pengiriman Batch Pasien</p>
+                </div>
+            </div>
+            <p class="card-desc">Pengiriman massal banyak kode booking sekaligus dengan tempel daftar teks. Mendukung pengiriman otomatis Task 1 s.d. 7 secara instan.</p>
+            <div class="card-btn btn-blue" style="background: linear-gradient(135deg, #06b6d4, #0284c7);">
+                <span>Buka Kirim Bulk</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </div>
         </a>

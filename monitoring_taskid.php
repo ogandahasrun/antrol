@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/koneksi.php'; ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -361,7 +362,9 @@
                 <a href="index.php" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
                 <a href="engine_sync.php" class="nav-item"><i class="fa-solid fa-bolt"></i> Engine Sync</a>
                 <a href="monitoring_taskid.php" class="nav-item active"><i class="fa-solid fa-chart-line"></i> Kontrol Task ID</a>
-                <a href="test_single.php" class="nav-item"><i class="fa-solid fa-vial"></i> Tester Single</a>
+                <a href="test_single.php" class="nav-item"><i class="fa-solid fa-paper-plane"></i> Kirim Single</a>
+                <a href="test_batch.php" class="nav-item"><i class="fa-solid fa-layer-group"></i> Kirim Bulk</a>
+                <a href="dashboard_waktutunggu.php" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Dashboard BPJS</a>
             </nav>
         </header>
 

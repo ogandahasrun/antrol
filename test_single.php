@@ -1,9 +1,10 @@
+<?php require_once __DIR__ . '/koneksi.php'; ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tester Single Booking - SIMKES Khanza Mobile JKN</title>
+    <title>Kirim Single Booking - SIMKES Khanza Mobile JKN</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -91,27 +92,6 @@
         }
 
         .brand-text p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <!-- Header -->
-    <header>
-        <div class="brand-title">
-            <div class="brand-icon"><i class="fa-solid fa-vial"></i></div>
-            <div class="brand-text">
-                <h1>Tester Single Booking Mobile JKN</h1>
-                <p>Uji Coba Pengiriman 1 Kode Booking / Task ID ke Web Service BPJS</p>
-            </div>
-        </div>
-        <nav class="nav-links">
-            <a href="index.php" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
-            <a href="engine_sync.php" class="nav-item"><i class="fa-solid fa-bolt"></i> Engine Sync</a>
-            <a href="monitoring_taskid.php" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kontrol Task ID</a>
-            <a href="test_single.php" class="nav-item active"><i class="fa-solid fa-vial"></i> Tester Single</a>
-        </nav>
-    </header>
 
         /* Form Card */
         .card {
@@ -120,10 +100,17 @@
             border: 1px solid var(--border-card);
             border-radius: 16px;
             padding: 24px;
-            display: flex; flex-direction: column; gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .card-title { font-size: 16px; font-weight: 600; border-bottom: 1px solid var(--border-card); padding-bottom: 12px; }
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-card);
+            padding-bottom: 12px;
+        }
 
         .grid-form {
             display: grid;
@@ -131,8 +118,17 @@
             gap: 16px;
         }
 
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .form-group label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
 
         .form-control {
             background: rgba(11, 15, 23, 0.6);
@@ -144,18 +140,32 @@
             font-size: 14px;
         }
 
-        .form-control:focus { outline: none; border-color: var(--primary); }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
 
         .btn {
             background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-            color: #ffffff; border: none; border-radius: 10px;
-            padding: 12px 24px; font-size: 14px; font-weight: 600;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             transition: all 0.2s ease;
             box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
         }
 
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
 
         /* Output Result Box */
         .result-grid {
@@ -164,7 +174,11 @@
             gap: 20px;
         }
 
-        @media (max-width: 840px) { .result-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 840px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
         .code-box {
             background: #0d1117;
@@ -180,15 +194,31 @@
         }
 
         .box-title {
-            font-size: 13px; font-weight: 600; color: var(--accent-cyan);
-            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .badge-status {
-            padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
         }
-        .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
     </style>
 </head>
 <body>
@@ -197,13 +227,20 @@
     <!-- Header -->
     <header>
         <div class="brand-title">
-            <div class="brand-icon">🧪</div>
+            <div class="brand-icon"><i class="fa-solid fa-paper-plane"></i></div>
             <div class="brand-text">
-                <h1>Tester Single Booking Mobile JKN</h1>
-                <p>Uji Coba Pengiriman 1 Kode Booking / Task ID ke Web Service BPJS</p>
+                <h1>Kirim Single Booking Mobile JKN</h1>
+                <p>Pengiriman 1 Kode Booking / Task ID ke Web Service BPJS</p>
             </div>
         </div>
-        <a href="index.php" class="nav-btn">📊 Kembali ke Dashboard Main</a>
+        <nav class="nav-links">
+            <a href="index.php" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="engine_sync.php" class="nav-item"><i class="fa-solid fa-bolt"></i> Engine Sync</a>
+            <a href="monitoring_taskid.php" class="nav-item"><i class="fa-solid fa-chart-line"></i> Kontrol Task ID</a>
+            <a href="test_single.php" class="nav-item active"><i class="fa-solid fa-paper-plane"></i> Kirim Single</a>
+            <a href="test_batch.php" class="nav-item"><i class="fa-solid fa-layer-group"></i> Kirim Bulk</a>
+            <a href="dashboard_waktutunggu.php" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Dashboard BPJS</a>
+        </nav>
     </header>
 
     <!-- Form Input Card -->
